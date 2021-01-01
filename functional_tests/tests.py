@@ -1,10 +1,10 @@
 from selenium import webdriver
-import unittest
 from selenium.webdriver.common.keys import Keys
 import time
+from django.test import LiveServerTestCase
 
 
-class NewVisitorTest(unittest.TestCase):
+class NewVisitorTest(LiveServerTestCase):
     '''тест нового посетителя'''
 
     def setUp(self):
@@ -26,7 +26,7 @@ class NewVisitorTest(unittest.TestCase):
         '''тест: можно начать список и получить его позже'''
         # Эдит слышала про крутое новое онлайн-приложение со списком
         # неотложных дел. Она решает оценить его домашнюю страницу
-        self.browser.get('http://localhost:8000')
+        self.browser.get(self.live_server_url)
         # Она видит, что заголовок и шапка страницы говорят о списках
         # неотложных дел
         self.assertIn('To-Do', self.browser.title)
@@ -42,7 +42,7 @@ class NewVisitorTest(unittest.TestCase):
         # Когда она нажимает enter, страница обновляется, и теперь страница
         # содержит "1: Купить павлиньи перья" в качестве элемента таблицы списка
         inputbox.send_keys(Keys.ENTER)
-        time.sleep(1)
+        time.sleep(3)
         self.check_for_row_in_list_table('1: Купить павлиньи перья')
         # Текствое поле по-прежнему приглашает ее добавить еще один элемент.
         # Она вводит "Сделать мушку из павлиньих перьев"
@@ -59,7 +59,3 @@ class NewVisitorTest(unittest.TestCase):
         # выводится небольшой текст с пояснениями.
         self.fail('Закончить тест!')
         # Она посещает этот URL-адрес – ее список по-прежнему там.
-
-
-if __name__ == '__main__':
-    unittest.main(warnings='ignore')
