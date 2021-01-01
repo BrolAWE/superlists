@@ -5,4 +5,6 @@ from django.http import HttpResponse
 # Создайте здесь представления свои.
 def home_page(request):
     '''домашняя страница'''
-    return render(request, 'home.html')
+    return render(request, 'home.html', {
+        'new_item_text': request.POST.get('item_text', ''),
+    })
