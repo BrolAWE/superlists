@@ -1,3 +1,5 @@
+import os
+
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time
@@ -13,11 +15,16 @@ class NewVisitorTest(StaticLiveServerTestCase):
     def setUp(self):
         '''установка'''
         self.browser = webdriver.Chrome("C:/Users/aleks/Downloads/chromedriver_win32/chromedriver.exe")
+        staging_server = os.environ.get('STAGING_SERVER')
+        if staging_server:
+            self.live_server_url = 'http://' + staging_server
+
 
     def tearDown(self):
         '''демонтаж'''
 
         self.browser.quit()
+
 
     def wait_for_row_in_list_table(self, row_text):
         '''ожидать строку в таблице списка'''
@@ -32,6 +39,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
                 if time.time() - start_time > MAX_WAIT:
                     raise e
                 time.sleep(0.5)
+
 
     def test_can_start_a_list_for_one_user(self):
         '''тест: можно начать список для одного пользователя'''
@@ -64,6 +72,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
         self.wait_for_row_in_list_table('2: Сделать мушку из павлиньих перьев')
         self.wait_for_row_in_list_table('1: Купить павлиньи перья')
         # Удовлетворенная, она снова ложится спать.
+
 
     def test_multiple_users_can_start_lists_at_different_urls(self):
         '''тест: многочисленные пользователи могут начать списки по разным url'''
@@ -101,6 +110,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
         self.assertNotIn('Купить павлиньи перья', page_text)
         self.assertIn('Купить молоко', page_text)
         # Удовлетворенные, они оба ложатся спать
+
 
     def test_layout_and_styling(self):
         '''тест макета и стилевого оформления'''
