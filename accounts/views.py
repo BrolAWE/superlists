@@ -44,5 +44,5 @@ def login(request):
 
 def logout(request):
     '''выход из системы'''
-    auth_logout(request)
+    auth.logout(request)
     return redirect('/')
