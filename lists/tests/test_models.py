@@ -87,3 +87,4 @@ class ListModelTest(TestCase):
     def test_list_owner_is_optional(self):
         '''тест: владелец списка является необязательным'''
         List.objects.create()  # не должно поднимать исключение
+
