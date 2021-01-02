@@ -1,3 +1,4 @@
+import time
 from unittest import skip
 
 from selenium.webdriver.common.keys import Keys
@@ -38,6 +39,7 @@ class ItemValidationTest(FunctionalTest):
         self.wait_for(lambda: self.browser.find_elements_by_css_selector(
             '#id_text:invalid'
         ))
+        time.sleep(1)
         # И она может исправиться, заполнив поле текстом
         self.get_item_input_box().send_keys('Make tea')
         self.wait_for(lambda: self.browser.find_elements_by_css_selector(
