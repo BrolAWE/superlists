@@ -6,6 +6,10 @@ from django.http import HttpResponse
 from lists.forms import ItemForm, ExistingListItemForm
 from lists.models import Item, List
 
+from accounts.models import Token
+
+from django.core.mail import send_mail
+
 
 def home_page(request):
     return render(request, 'home.html', {'form': ItemForm()})
