@@ -1,9 +1,10 @@
 import uuid
 import sys
 
-from django.contrib.auth import authenticate
 from django.shortcuts import render, redirect
 from django.core.mail import send_mail
+
+from accounts.authentication import PasswordlessAuthenticationBackend
 from accounts.models import Token
 from django.contrib.auth import login as auth_login, logout as auth_logout
 
@@ -30,7 +31,9 @@ def login(request):
     '''регистрация в системе'''
     print('login view', file=sys.stderr)
     uid = request.GET.get('uid')
-    user = authenticate(uid=uid)
+    pab = PasswordlessAuthenticationBackend()
+    user = pab.authenticate(uid=uid)
+    print(user)
     if user is not None:
         auth_login(request, user)
     return redirect('/')
