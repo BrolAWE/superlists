@@ -3,39 +3,42 @@ import sys
 
 from django.shortcuts import render, redirect
 from django.core.mail import send_mail
+from django.urls import reverse
 
 from accounts.authentication import PasswordlessAuthenticationBackend
 from accounts.models import Token
 from django.contrib.auth import login as auth_login, logout as auth_logout
+from django.contrib import auth, messages
 
 
 # Create your views here.
 
 def send_login_email(request):
-    '''выслать ссылку на логин по почте'''
+    '''отправить сообщение для входа в систему'''
     email = request.POST['email']
-    uid = str(uuid.uuid4())
-    Token.objects.create(email=email, uid=uid)
-    print('saving uid', uid, 'for email', email, file=sys.stderr)
-    url = request.build_absolute_uri(f'/accounts/login?uid={uid}')
+    token = Token.objects.create(email=email)
+    url = request.build_absolute_uri(
+        reverse('login') + '?token=' + str(token.uid)
+    )
+    message_body = f'Use this link to log in:\n\n{url}'
     send_mail(
         'Your login link for Superlists',
-        f'Use this link to log in:\n\n{url}',
+        message_body,
         'noreply@superlists',
-        [email],
+        [email]
     )
-    return render(request, 'login_email_sent.html')
+    messages.success(
+        request,
+        "Проверьте свою почту, мы отправили Вам ссылку,которую можно использовать для входа на сайт."
+    )
+    return redirect('/')
 
 
 def login(request):
-    '''регистрация в системе'''
-    print('login view', file=sys.stderr)
-    uid = request.GET.get('uid')
-    pab = PasswordlessAuthenticationBackend()
-    user = pab.authenticate(uid=uid)
-    print(user)
-    if user is not None:
-        auth_login(request, user)
+    '''зарегистрировать вход в систему'''
+    user = PasswordlessAuthenticationBackend().authenticate(uid=request.GET.get('token'))
+    if user:
+        auth.login(request, user)
     return redirect('/')
 
 
