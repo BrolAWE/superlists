@@ -1,14 +1,10 @@
-import uuid
-import sys
-
-from django.shortcuts import render, redirect
+from django.contrib import auth, messages
 from django.core.mail import send_mail
+from django.shortcuts import redirect
 from django.urls import reverse
 
 from accounts.authentication import PasswordlessAuthenticationBackend
 from accounts.models import Token
-from django.contrib.auth import login as auth_login, logout as auth_logout
-from django.contrib import auth, messages
 
 
 # Create your views here.

@@ -2,10 +2,8 @@ from accounts.models import User, Token
 
 
 class PasswordlessAuthenticationBackend(object):
-    '''беспарольный серверный процессор аутентификации'''
 
     def authenticate(self, uid):
-        '''аутентифицировать'''
         try:
             token = Token.objects.get(uid=uid)
             return User.objects.get(email=token.email)
@@ -15,7 +13,6 @@ class PasswordlessAuthenticationBackend(object):
             return None
 
     def get_user(self, email):
-        '''получить пользователя'''
         try:
             return User.objects.get(email=email)
         except User.DoesNotExist:
